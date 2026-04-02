@@ -345,6 +345,50 @@
       
         </div>
       </section>
+      <p class="last-update">
+  © <span id="year"></span> Sheng Tan · Last updated: <span id="last-update">Loading...</span>
+</p >
+
+<script>
+  // 自动年份
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // 获取 GitHub 最后更新时间
+  async function fetchLastUpdate() {
+    const username = "tansheng57";
+    const repo = "tansheng57.github.io";
+
+    const url = `https://api.github.com/repos/${username}/${repo}/commits`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const date = new Date(data[0].commit.committer.date);
+
+      function getOrdinal(n) {
+        if (n % 100 >= 11 && n % 100 <= 13) return n + "th";
+        switch (n % 10) {
+          case 1: return n + "st";
+          case 2: return n + "nd";
+          case 3: return n + "rd";
+          default: return n + "th";
+        }
+      }
+
+      const day = getOrdinal(date.getDate());
+      const month = date.toLocaleString('en-US', { month: 'long' });
+      const year = date.getFullYear();
+
+      document.getElementById("last-update").textContent =
+        `${day} ${month} ${year}`;
+    } catch (error) {
+      document.getElementById("last-update").textContent = "Unavailable";
+    }
+  }
+
+  fetchLastUpdate();
+</script>
     </main>
 
     <!-- <footer>
